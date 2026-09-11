@@ -1,0 +1,31 @@
+---
+title: Emails
+description: Resend over plain REST. Receipt emails, templates, and the one rule that matters.
+---
+
+One rule: **email failure must never fail money.** Receipts are best-effort; the webhook grants the license first, emails second.
+
+## Setup
+
+```bash
+RESEND_API_KEY="re_xxx"
+EMAIL_FROM="noreply@yourdomain.com"
+```
+
+No SDK — plain `fetch` to the Resend REST API (`shared/lib/email.ts`). Works on edge and node, no key means silently skip (dev-safe).
+
+## Receipt email
+
+`sendReceiptEmail(event, fulfillment)` sends the buyer their tier, order ID, charged amount, and license key. It:
+
+- skips duplicates (webhook redelivery),
+- skips when there's no buyer email,
+- returns `false` instead of throwing when Resend fails.
+
+## Templates
+
+Five Astro templates in `shared/email/`: welcome, password reset, invoice, notification, trial ending. Render to HTML, send via `sendMail({ to, subject, html })`.
+
+## Auth emails
+
+`shared/lib/auth.ts` keeps its own tested inline senders (verification, reset) — don't churn them into the shared mailer without a reason.

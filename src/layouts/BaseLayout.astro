@@ -1,0 +1,15 @@
+---
+import ProductLayout from '@shared/layouts/ProductLayout.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+}
+
+const { title, description = 'A production-ready SaaS built with Startplate.', image } = Astro.props;
+---
+
+<ProductLayout title={title} description={description} image={image}>
+  <slot />
+</ProductLayout>

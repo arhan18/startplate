@@ -1,0 +1,29 @@
+---
+import Sidebar from './Sidebar.astro';
+import ProductLayout from '../../layouts/ProductLayout.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  sidebarItems: Array<{
+    label: string;
+    href: string;
+    icon?: string;
+    badge?: string;
+  }>;
+}
+
+const { title, description, sidebarItems } = Astro.props;
+---
+
+<ProductLayout title={title} description={description}>
+  <div class="flex min-h-screen">
+    <Sidebar items={sidebarItems} />
+    
+    <main class="main-content">
+      <div class="max-w-6xl mx-auto">
+        <slot />
+      </div>
+    </main>
+  </div>
+</ProductLayout>

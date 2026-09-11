@@ -1,0 +1,73 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import DemoBar from '../components/DemoBar.astro';
+
+// Demo-only login: static hosting can't run better-auth here, so this page
+// signs you into a local demo session (localStorage) that unlocks /dashboard.
+// Buyers wire this form to shared/lib/auth.ts (email+password, magic link, OAuth).
+---
+
+<BaseLayout title="Login demo — Startplate">
+  <DemoBar />
+  <section class="min-h-screen flex items-center justify-center px-4 py-16">
+    <div class="w-full max-w-md">
+      <div class="mb-6 px-4 py-3 bg-amber-500/10 border border-amber-500/30 rounded-xl text-amber-200 text-sm">
+        Demo mode — any email signs you in locally. No password, no account, nothing leaves your browser.
+      </div>
+      <div class="p-8 bg-white/5 border border-white/10 rounded-2xl">
+        <h1 class="text-3xl font-bold text-white mb-2">Welcome back</h1>
+        <p class="text-gray-400 text-sm mb-8">Sign in to see the buyer dashboard. Buyers get this wired to Better Auth.</p>
+        <form id="demo-login" class="space-y-4">
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-300 mb-1">Email</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              required
+              placeholder="founder@example.com"
+              autocomplete="email"
+              class="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-gray-600 outline-none focus:border-cyan-400"
+            />
+          </div>
+          <button
+            type="submit"
+            class="w-full px-4 py-2.5 bg-cyan-500 text-black font-semibold rounded-lg hover:bg-cyan-400 transition-all"
+          >
+            Continue with demo →
+          </button>
+        </form>
+        <p class="mt-6 text-xs text-gray-500">
+          Real wiring: <code class="text-gray-400">shared/lib/auth.ts</code> (email+password, magic link, OAuth, 2FA).
+          <a class="text-cyan-400 underline ml-1" href="/guides/auth">Auth guide</a>
+        </p>
+        <p class="mt-3 text-sm text-gray-400 text-center">
+          This login screen is 1% of the template.
+          <a class="text-cyan-400 font-semibold underline" href="https://startplate.dev/startplate/preview">Get all of it →</a>
+        </p>
+      </div>
+      <p class="mt-6 text-sm text-gray-500 text-center">
+        <a class="text-cyan-400 underline" href="/">← Back to landing</a>
+      </p>
+    </div>
+  </section>
+
+  <script>
+    (function () {
+      var KEY = 'sp_demo_session';
+      if (localStorage.getItem(KEY)) {
+        var next = new URLSearchParams(location.search).get('next') || '/dashboard/';
+        location.replace(next);
+        return;
+      }
+      document.getElementById('demo-login').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var email = document.getElementById('email').value.trim();
+        if (!email) return;
+        localStorage.setItem(KEY, JSON.stringify({ email: email, at: Date.now() }));
+        var next = new URLSearchParams(location.search).get('next') || '/dashboard/';
+        location.href = next;
+      });
+    })();
+  </script>
+</BaseLayout>

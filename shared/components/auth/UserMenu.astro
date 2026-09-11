@@ -1,0 +1,100 @@
+---
+interface Props {
+  user?: {
+    name?: string;
+    email?: string;
+    image?: string;
+  } | null;
+  class?: string;
+}
+
+const { user, class: className = '' } = Astro.props;
+---
+
+<div class:list={['relative', className]}>
+  {user ? (
+    <div class="flex items-center gap-3">
+      <button
+        id="user-menu-btn"
+        class="flex items-center gap-2 rounded-md px-2 py-1.5 transition-colors hover:bg-[hsl(var(--accent))]"
+      >
+        {user.image ? (
+          <img src={user.image} alt={user.name || ''} class="w-6 h-6 rounded-full" />
+        ) : (
+          <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium" style="background-color: hsl(var(--muted)); color: hsl(var(--muted-foreground));">
+            {(user.name || user.email || '?')[0].toUpperCase()}
+          </div>
+        )}
+        <span class="text-sm font-medium hidden sm:inline" style="color: hsl(var(--foreground));">
+          {user.name || user.email}
+        </span>
+        <svg class="w-4 h-4" style="color: hsl(var(--muted-foreground));" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+
+      <!-- Dropdown -->
+      <div
+        id="user-menu-dropdown"
+        class="hidden absolute right-0 top-full mt-2 w-48 z-50"
+        style="background-color: hsl(var(--background)); border: 1px solid hsl(var(--border));"
+      >
+        <div class="py-1">
+          <a href="/dashboard" class="block px-4 py-2 text-sm hover:bg-[hsl(var(--accent))]" style="color: hsl(var(--foreground));">
+            Dashboard
+          </a>
+          <a href="/settings" class="block px-4 py-2 text-sm hover:bg-[hsl(var(--accent))]" style="color: hsl(var(--foreground));">
+            Settings
+          </a>
+          <hr class="my-1" style="border-color: hsl(var(--border));" />
+          <button
+            id="signout-btn"
+            class="w-full text-left px-4 py-2 text-sm hover:bg-[hsl(var(--accent))]"
+            style="color: hsl(var(--destructive));"
+          >
+            Sign Out
+          </button>
+        </div>
+      </div>
+    </div>
+  ) : (
+    <div class="flex items-center gap-2">
+      <a href="/signin" class="btn-ghost btn-sm">
+        Sign In
+      </a>
+      <a href="/signup" class="btn-primary btn-sm">
+        Sign Up
+      </a>
+    </div>
+  )}
+</div>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const menuBtn = document.getElementById('user-menu-btn');
+    const dropdown = document.getElementById('user-menu-dropdown');
+    const signOutBtn = document.getElementById('signout-btn');
+
+    if (menuBtn && dropdown) {
+      menuBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle('hidden');
+      });
+
+      document.addEventListener('click', () => {
+        dropdown.classList.add('hidden');
+      });
+    }
+
+    if (signOutBtn) {
+      signOutBtn.addEventListener('click', async () => {
+        try {
+          await fetch('/api/auth/sign-out', { method: 'POST' });
+          window.location.href = '/';
+        } catch (error) {
+          console.error('Sign out error:', error);
+        }
+      });
+    }
+  });
+</script>

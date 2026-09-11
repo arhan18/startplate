@@ -1,0 +1,79 @@
+---
+interface Props {
+  id: string;
+  title?: string;
+  class?: string;
+}
+
+const { id, title, class: className = '' } = Astro.props;
+---
+
+<div
+  id={id}
+  class="modal-backdrop hidden"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby={title ? `${id}-title` : undefined}
+>
+  <div class:list={['modal', className]}>
+    <div class="flex items-center justify-between mb-4">
+      {title && (
+        <h3 id={`${id}-title`} class="text-lg font-semibold" style="color: hsl(var(--foreground));">
+          {title}
+        </h3>
+      )}
+      <button
+        class="btn-ghost btn-sm p-1"
+        data-modal-close={id}
+        aria-label="Close"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+    <slot />
+  </div>
+</div>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    // Close modal on backdrop click
+    document.querySelectorAll('.modal-backdrop').forEach((backdrop) => {
+      backdrop.addEventListener('click', (e) => {
+        if (e.target === backdrop) {
+          backdrop.classList.add('hidden');
+        }
+      });
+    });
+
+    // Close modal on close button click
+    document.querySelectorAll('[data-modal-close]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const modalId = btn.getAttribute('data-modal-close');
+        const modal = document.getElementById(modalId!);
+        if (modal) modal.classList.add('hidden');
+      });
+    });
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-backdrop:not(.hidden)').forEach((modal) => {
+          modal.classList.add('hidden');
+        });
+      }
+    });
+  });
+
+  // Utility functions to open/close modals
+  window.openModal = function(id: string) {
+    const modal = document.getElementById(id);
+    if (modal) modal.classList.remove('hidden');
+  };
+
+  window.closeModal = function(id: string) {
+    const modal = document.getElementById(id);
+    if (modal) modal.classList.add('hidden');
+  };
+</script>

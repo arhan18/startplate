@@ -1,0 +1,88 @@
+---
+interface Props {
+  productId: string;
+  productName: string;
+  price: number;
+  interval?: 'month' | 'year';
+  brand?: string;
+  variant?: 'default' | 'outline' | 'ghost';
+  size?: 'sm' | 'md' | 'lg';
+  class?: string;
+}
+
+const {
+  productId,
+  productName,
+  price,
+  interval = 'month',
+  brand = 'arhan-ahmad',
+  variant = 'default',
+  size = 'md',
+  class: className = '',
+} = Astro.props;
+
+const sizeClasses = {
+  sm: 'btn-sm',
+  md: '',
+  lg: 'btn-lg',
+};
+
+const variantClasses = {
+  default: 'btn-primary',
+  outline: 'btn-secondary',
+  ghost: 'btn-ghost',
+};
+
+const intervalLabel = interval === 'month' ? '/mo' : '/yr';
+---
+
+<button
+  data-dodo-subscription
+  data-product-id={productId}
+  data-product-name={productName}
+  data-price={price}
+  data-interval={interval}
+  data-brand={brand}
+  class:list={[variantClasses[variant], sizeClasses[size], className]}
+>
+  <slot>
+    Subscribe ${price}{intervalLabel} — {productName}
+  </slot>
+</button>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const subscriptionButtons = document.querySelectorAll('[data-dodo-subscription]');
+    
+    subscriptionButtons.forEach((button) => {
+      button.addEventListener('click', async () => {
+        const el = button as HTMLElement;
+        const productId = el.dataset.productId;
+        const brand = el.dataset.brand;
+        
+        // @ts-ignore
+        const { DodoPayments } = window;
+        if (!DodoPayments) {
+          console.error('DodoPayments SDK not loaded');
+          return;
+        }
+
+        DodoPayments.Checkout.open({
+          productId: productId!,
+          brandId: brand,
+          redirectUrl: `${window.location.origin}/checkout/success`,
+        });
+      });
+    });
+  });
+</script>
+
+<script>
+  // Load DodoPayments SDK (if not already loaded)
+  if (!document.querySelector('script[src="https://checkout.dodopayments.com/v1.js"]')) {
+    const script = document.createElement('script');
+    script.src = 'https://checkout.dodopayments.com/v1.js';
+    script.async = true;
+    document.head.appendChild(script);
+  }
+</script>

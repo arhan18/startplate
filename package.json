@@ -1,0 +1,46 @@
+{
+  "name": "my-saas",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "pack": "node scripts/pack.mjs",
+    "lint": "eslint . --ext .ts,.astro",
+    "typecheck": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^4.0.0",
+    "@astrojs/cloudflare": "^12.0.0",
+    "@astrojs/sitemap": "^3.0.0",
+    "@astrojs/starlight": "0.36.0",
+    "@libsql/client": "^0.14.0",
+    "@tailwindcss/vite": "^4.0.0",
+    "astro": "5.18.2",
+    "better-auth": "1.6.10",
+    "gsap": "^3.13.0",
+    "hono": "^4.0.0",
+    "kysely": "^0.29.5",
+    "kysely-libsql": "^0.7.1",
+    "motion": "^12.0.0",
+    "resend": "^4.0.0",
+    "shiki": "3.12.0",
+    "standardwebhooks": "^1.0.0",
+    "stripe": "^17.0.0",
+    "tailwindcss": "^4.0.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.50.0",
+    "@types/node": "^22.0.0",
+    "eslint": "^9.0.0",
+    "typescript": "^5.6.0",
+    "vitest": "^3.0.0",
+    "wrangler": "^4.0.0"
+  }
+}

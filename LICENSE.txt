@@ -1,0 +1,15 @@
+STARTPLATE LICENSE (summary — full terms at https://arhanahmad.com/startplate/license)
+
+You buy a license to USE this template, not ownership of it.
+Arhan Ahmad keeps all intellectual property.
+
+  MAY:  build unlimited projects (incl. client work your tier allows);
+        modify everything; use 1 seat (Starter) / 5 seats (Pro) /
+        unlimited seats (Pro+). White-label on Pro+.
+  NEVER: resell, redistribute, or share the template or repo access;
+        publish it (or a derivative) as a template/boilerplate/course;
+        remove copyright notices; exceed your seat count.
+
+Updates: Starter/Pro 1 year from purchase, Pro+ lifetime. Keep what you
+downloaded forever; new versions stop at expiry ($49/yr extension available).
+Breaking these terms ends the license immediately, without refund.

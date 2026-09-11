@@ -1,0 +1,44 @@
+---
+title: Deployment
+description: Ship your product to Cloudflare Pages free with Turso and Resend.
+---
+
+Hosting is $0: Cloudflare Pages (free, commercial use allowed) + Turso free tier + Resend free tier.
+
+## 1. Build
+
+```bash
+npm run build
+```
+
+Output lands in `dist/`. A green build is your deploy gate — never deploy red.
+
+## 2. Push to Cloudflare Pages
+
+```bash
+npx wrangler pages deploy dist --project-name=your-project
+```
+
+## 3. Set production secrets
+
+In the Cloudflare dashboard (or `.dev.vars` locally — never commit secrets):
+
+- `TURSO_DATABASE_URL` — your hosted `libsql://` URL
+- `TURSO_AUTH_TOKEN`
+- `DODO_PAYMENTS_API_KEY` — live key
+- `DODO_PAYMENTS_WEBHOOK_SECRET`
+- `DODO_PRODUCTS_JSON` — your tier catalog (see [Payments](/guides/payments/))
+- `RESEND_API_KEY`, `EMAIL_FROM`
+- `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL` (your live URL)
+- `SITE_URL` (your live URL)
+
+## 4. Point the webhook
+
+In Dodo/Stripe/Lemon Squeezy, set the webhook URL to `https://yourdomain.com/api/webhook`. Test with a real $1 checkout, then delete the test row.
+
+## Checklist
+
+- [ ] `npm run build` green
+- [ ] Secrets set in Cloudflare, none committed
+- [ ] Webhook endpoint registered with your provider
+- [ ] One live end-to-end purchase verified

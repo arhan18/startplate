@@ -1,0 +1,50 @@
+---
+title: Quickstart
+description: From npx to a running landing page with auth, payments, and email in under 10 minutes.
+---
+
+New here? This is the only page you need. Ten minutes, copy-paste, running site.
+
+## 1. Scaffold
+
+```bash
+npx create-startplate my-product
+cd my-product
+npm install
+```
+
+## 2. Configure
+
+Copy `.env.example` to `.env` and fill the minimum for local dev:
+
+```bash
+TURSO_DATABASE_URL="file:./local.db"
+PAYMENT_PROVIDER="dodo"
+SITE_URL="http://localhost:4321"
+```
+
+Local SQLite file — no Turso account needed to start. Switch to a hosted URL when you deploy.
+
+## 3. Run
+
+```bash
+npm run dev
+```
+
+Open `http://localhost:4321`. You get: landing page, pricing page, contact page, auth flows, and checkout wiring — all working against your local DB.
+
+## 4. Verify
+
+```bash
+# fresh DBs first (file DBs persist between runs)
+rm -f /tmp/startplate-*.db
+npm test
+```
+
+22 tests: auth lifecycle, payments (checkout + webhook + upgrades), admin guard, receipt email, schema migration.
+
+## Next steps
+
+- [Deployment](/guides/deployment/) — ship to Cloudflare Pages free.
+- [Payments](/guides/payments/) — connect Dodo and go live.
+- [Environment variables](/reference/env-vars/) — every knob in one table.

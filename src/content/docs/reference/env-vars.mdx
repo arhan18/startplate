@@ -1,0 +1,28 @@
+---
+title: Environment variables
+description: Every variable the template reads, in one table.
+---
+
+Copy `.env.example` to `.env`. Never commit secrets — production uses Cloudflare secrets / `.dev.vars`.
+
+| Variable | Required | What it does |
+|---|---|---|
+| `TURSO_DATABASE_URL` | yes | DB URL (`file:./local.db` locally, `libsql://…` live) |
+| `TURSO_AUTH_TOKEN` | live only | Turso auth token |
+| `BETTER_AUTH_SECRET` | yes | Session encryption (32+ chars) |
+| `BETTER_AUTH_URL` | yes | Canonical URL (drives email links) |
+| `PAYMENT_PROVIDER` | no | `dodo` (default) / `stripe` / `lemonsqueezy` |
+| `DODO_PAYMENTS_API_KEY` | if dodo | Checkout + API calls |
+| `DODO_PAYMENTS_ENVIRONMENT` | no | `test_mode` (default) / `live_mode` |
+| `DODO_PAYMENTS_WEBHOOK_SECRET` | if dodo | Standard Webhooks verification |
+| `DODO_PRODUCTS_JSON` | if selling | product_id → tier catalog (see [Payments](/guides/payments/)) |
+| `DODO_PORTAL_URL` | no | Customer portal base URL |
+| `STRIPE_SECRET_KEY` | if stripe | Stripe API |
+| `STRIPE_WEBHOOK_SECRET` | if stripe | Stripe signature verify |
+| `LEMONSQUEEZY_API_KEY` | if LS | LS API |
+| `LEMONSQUEEZY_STORE_ID` | if LS | Checkout store |
+| `LEMONSQUEEZY_WEBHOOK_SECRET` | if LS | LS signature verify |
+| `RESEND_API_KEY` | if email | Sending (missing = skip silently) |
+| `EMAIL_FROM` | if email | Sender address |
+| `SITE_URL` | yes | Links, callbacks, sitemap |
+| `PUBLIC_POSTHOG_KEY` / `PUBLIC_POSTHOG_HOST` | no | Analytics |

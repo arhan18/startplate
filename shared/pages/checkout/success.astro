@@ -1,0 +1,37 @@
+---
+import ProductLayout from '../../layouts/ProductLayout.astro';
+
+const title = 'Checkout Successful';
+const description = 'Your payment was successful. Thank you for your purchase!';
+---
+
+<ProductLayout title={title} description={description}>
+  <div class="min-h-screen flex items-center justify-center px-4">
+    <div class="max-w-md w-full text-center">
+      <div class="mb-6">
+        <div class="w-16 h-16 mx-auto rounded-full flex items-center justify-center" style="background-color: hsl(var(--success) / 0.1);">
+          <svg class="w-8 h-8" style="color: hsl(var(--success));" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+      </div>
+
+      <h1 class="text-2xl font-bold mb-2" style="color: hsl(var(--foreground));">
+        Payment Successful!
+      </h1>
+
+      <p class="mb-8" style="color: hsl(var(--muted-foreground));">
+        Thank you for your purchase. You'll receive a confirmation email shortly.
+      </p>
+
+      <div class="flex flex-col gap-3">
+        <a href="/" class="btn-primary w-full">
+          Go to Homepage
+        </a>
+        <a href="/dashboard" class="btn-secondary w-full">
+          View Dashboard
+        </a>
+      </div>
+    </div>
+  </div>
+</ProductLayout>

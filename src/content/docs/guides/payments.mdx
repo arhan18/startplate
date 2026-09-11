@@ -1,0 +1,51 @@
+---
+title: Payments
+description: Dodo by default, Stripe or Lemon Squeezy with one env var. Checkout, webhooks, upgrades, refunds.
+---
+
+One interface (`shared/lib/payments.ts`), three providers. Dodo is the default: Merchant of Record (handles global tax), India-friendly.
+
+## Choose a provider
+
+```bash
+PAYMENT_PROVIDER="dodo"   # default
+# PAYMENT_PROVIDER="stripe"
+# PAYMENT_PROVIDER="lemonsqueezy"
+```
+
+No code changes — the same `createCheckoutSession()` and `handleWebhook()` work for all three.
+
+## Product catalog (env-driven)
+
+`DODO_PRODUCTS_JSON` maps provider product IDs to tiers — no product IDs in code:
+
+```json
+{"pdt_starter": {"tier": "starter", "kind": "full"},
+ "pdt_s2p": {"tier": "pro", "kind": "upgrade", "from": "starter"}}
+```
+
+Tiers: `starter` (Solo: 1 seat, 3 themes, 1yr updates) → `pro` (Team: 5 seats, 10 themes, 1yr) → `pro_plus` (Agency: unlimited, all themes, lifetime). Display names via `tierName()` — keys never reach buyers. Upgrades pay the difference and require owning the lower tier — enforced server-side.
+
+## What happens on payment
+
+1. Checkout session created (Dodo REST shape proven in production).
+2. Webhook verifies the real signature over raw bytes — failures return 401 and grant nothing.
+3. Fulfillment writes idempotent `orders` + `licenses` rows, stamps coupon orders cashback-ineligible, records the instant-delivery waiver.
+4. Receipt email fires best-effort — email failure never fails the webhook.
+
+Unknown product IDs, missing emails, and upgrades without ownership **throw instead of granting access**. Money in, license out — or nothing.
+
+## Going live
+
+Your first payout needs one thing no template can shortcut: the provider's
+identity check (Dodo: ~1 day). Apply the moment you start building so it's
+done before launch day. Everything else — products, webhook, prices — takes
+minutes.
+
+## Checkout checkbox contract
+
+Your checkout UI must send `metadata.instant_delivery_waiver='true'` with the text: *"I agree to instant delivery and waive my right to withdraw."* Stored per order (`orders.waiver`).
+
+## Refunds
+
+Full or partial, from the provider dashboard — never pay buyers directly (MoR rule). Refunds should revoke the license key and remove repo access. See the refund policy pattern in `src/pages/startplate/refund.astro`.

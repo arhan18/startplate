@@ -1,0 +1,32 @@
+---
+title: Authentication
+description: Better Auth with email/password, sessions, roles, and a 25-line admin guard.
+---
+
+Auth is [Better Auth](https://better-auth.com) (`shared/lib/auth.ts`): email/password signup, verification emails, sessions, sign-out — all covered by a real lifecycle test.
+
+## Roles
+
+Users carry a `role` (`member` default, `admin` granted). Protect anything admin-only with the guard:
+
+```ts
+import { requireRole } from '@shared/lib/guard';
+
+export const POST: APIRoute = async ({ request }) => {
+  const { userId } = await requireRole(request.headers); // throws 401 unless admin
+  // ...
+};
+```
+
+No session → 401. Bad token → 401. Member → 401. Admin → passes with ID + role. The full matrix is tested in `tests/guard.test.ts`.
+
+## Pinned version
+
+`better-auth` is pinned exact (`1.6.10`). Newer publishes have shipped broken (`1.7.3` misses a dist file); older ones lack the `db/migration` export the tests use. Don't loosen the pin without running the suite.
+
+## Config
+
+```bash
+BETTER_AUTH_SECRET="at-least-32-chars"
+BETTER_AUTH_URL="http://localhost:4321"   # your live URL in production
+```

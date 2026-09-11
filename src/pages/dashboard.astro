@@ -1,0 +1,110 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import DemoBar from '../components/DemoBar.astro';
+
+// Demo-only page: 100% static sample data, zero JS, no DB, no auth.
+// Real dashboard for buyers = same layout wired to /api/* + requireRole.
+const orders = [
+  { id: 'ord_demo_1', email: 'fou***@example.com', tier: 'Pro', amount: '$249.00', status: 'paid' },
+  { id: 'ord_demo_2', email: 'ind***@example.com', tier: 'Starter', amount: '$129.00', status: 'paid' },
+  { id: 'ord_demo_3', email: 'stu***@example.com', tier: 'Pro+', amount: '$399.00', status: 'paid' },
+];
+const stats = [
+  { label: 'Revenue (sample)', value: '$777.00' },
+  { label: 'Licenses (sample)', value: '3' },
+  { label: 'Seats used (sample)', value: '4 / 11' },
+  { label: 'Refunds (sample)', value: '0' },
+];
+---
+
+<BaseLayout title="Dashboard demo — Startplate">
+  <DemoBar />
+  <section class="py-16 px-4">
+    <div class="max-w-6xl mx-auto">
+      <div class="mb-10 px-4 py-3 bg-amber-500/10 border border-amber-500/30 rounded-xl text-amber-200 text-sm">
+        Demo mode — every number below is hardcoded sample data. No account, no tracking, nothing to break.
+        Like this dashboard? <a class="font-bold underline" href="https://startplate.dev/startplate/preview">It's one payment away →</a>
+      </div>
+      <div class="flex flex-wrap items-center justify-between gap-4 mb-10">
+        <div>
+          <h1 class="text-4xl font-bold text-white mb-2">Dashboard</h1>
+          <p class="text-gray-400">What buyers see after <code class="text-gray-300">git pull</code>-ing their license: sales, licenses, seats.</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <span id="demo-user" class="text-sm text-gray-400"></span>
+          <button id="demo-logout" class="px-4 py-2 text-sm border border-white/20 text-white rounded-lg hover:bg-white/5 transition-all">Log out</button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+        {stats.map((s) => (
+          <div class="p-5 bg-white/5 border border-white/10 rounded-xl">
+            <p class="text-xs uppercase tracking-wider text-gray-500 mb-1">{s.label}</p>
+            <p class="text-2xl font-bold text-white">{s.value}</p>
+          </div>
+        ))}
+      </div>
+
+      <div class="p-6 bg-white/5 border border-white/10 rounded-xl mb-10">
+        <h2 class="text-lg font-semibold text-white mb-1">License <span class="text-cyan-400">Pro (sample)</span></h2>
+        <p class="text-gray-400 text-sm mb-4">Key <code class="text-gray-300">lic_demo***</code> · updates until 2027-09-06 · seats 3 / 5</p>
+        <div class="h-2 bg-white/10 rounded-full overflow-hidden">
+          <div class="h-full w-3/5 bg-cyan-500 rounded-full"></div>
+        </div>
+      </div>
+
+      <h2 class="text-lg font-semibold text-white mb-4">Recent orders (sample)</h2>
+      <div class="overflow-x-auto border border-white/10 rounded-xl">
+        <table class="w-full text-sm text-left">
+          <thead class="text-gray-500 border-b border-white/10">
+            <tr>
+              <th class="px-4 py-3 font-medium">Order</th>
+              <th class="px-4 py-3 font-medium">Buyer</th>
+              <th class="px-4 py-3 font-medium">Tier</th>
+              <th class="px-4 py-3 font-medium">Amount</th>
+              <th class="px-4 py-3 font-medium">Status</th>
+            </tr>
+          </thead>
+          <tbody class="text-gray-300">
+            {orders.map((o) => (
+              <tr class="border-b border-white/5 last:border-0">
+                <td class="px-4 py-3"><code>{o.id}</code></td>
+                <td class="px-4 py-3">{o.email}</td>
+                <td class="px-4 py-3">{o.tier}</td>
+                <td class="px-4 py-3">{o.amount}</td>
+                <td class="px-4 py-3"><span class="px-2 py-0.5 bg-emerald-500/15 text-emerald-300 rounded-full text-xs">{o.status}</span></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <p class="mt-10 text-sm text-gray-500">
+        <a class="text-cyan-400 underline" href="/">← Back to landing</a>
+        <span class="mx-2">·</span>
+        <a class="text-cyan-400 underline" href="/quickstart">How this was built</a>
+        <span class="mx-2">·</span>
+        <a class="text-cyan-400 underline" href="/faq">FAQ</a>
+      </p>
+    </div>
+  </section>
+
+  <script>
+    // Demo-only gate: buyers replace this with server-side requireRole().
+    (function () {
+      var KEY = 'sp_demo_session';
+      var raw = null;
+      try { raw = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
+      if (!raw || !raw.email) {
+        location.replace('/login/?next=' + encodeURIComponent('/dashboard/'));
+        return;
+      }
+      var el = document.getElementById('demo-user');
+      if (el) el.textContent = 'Signed in as ' + raw.email + ' (demo)';
+      document.getElementById('demo-logout').addEventListener('click', function () {
+        localStorage.removeItem(KEY);
+        location.href = '/login/';
+      });
+    })();
+  </script>
+</BaseLayout>

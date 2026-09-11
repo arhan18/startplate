@@ -1,0 +1,25 @@
+---
+title: License & updates
+description: What buyers get, how updates expire, extensions, and upgrades.
+---
+
+Buyers purchase a **license to use** the template, not ownership. Tiers differ in seats, themes, and update windows — never in projects (unlimited on all tiers).
+
+## Update windows
+
+- Solo / Team: **1 year** of updates from purchase.
+- Agency: **lifetime**.
+
+Updates arrive via the private GitHub repo — pull to receive. After expiry, buyers keep everything downloaded; new versions stop and repo access is removed until they extend.
+
+## Extension
+
+`$49/yr` updates extension continues access for expired Solo/Team licenses. Recurring add-on, same webhook flow.
+
+## Upgrades
+
+Tier moves (Solo→Team, Team→Agency, Solo→Agency) pay the **difference only**, applied instantly to the existing license and repo access. See [Payments](/guides/payments/) for the difference-product mechanism.
+
+## Enforcement
+
+`licenses.updates_until` is the source of truth (`YYYY-MM-DD` or `lifetime`). A scheduled job removes expired Solo/Team seats from the private repo; Agency is exempt.

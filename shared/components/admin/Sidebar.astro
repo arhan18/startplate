@@ -1,0 +1,59 @@
+---
+interface Props {
+  items: Array<{
+    label: string;
+    href: string;
+    icon?: string;
+    badge?: string;
+  }>;
+  currentPath?: string;
+  class?: string;
+}
+
+const { items, currentPath = Astro.url.pathname, class: className = '' } = Astro.props;
+---
+
+<aside class:list={['sidebar', className]}>
+  <div class="flex flex-col h-full">
+    <!-- Logo -->
+    <div class="mb-8">
+      <a href="/" class="text-lg font-bold" style="color: hsl(var(--foreground));">
+        <slot name="logo">
+          Dashboard
+        </slot>
+      </a>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="flex-1">
+      <ul class="flex flex-col gap-1">
+        {items.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              class:list={[
+                'flex items-center gap-3 px-3 py-2 text-sm font-medium transition-colors rounded-md',
+                currentPath === item.href
+                  ? 'bg-[hsl(var(--accent))] text-[hsl(var(--accent-foreground))]'
+                  : 'text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))]',
+              ]}
+            >
+              {item.icon && (
+                <span class="w-4 h-4" set:html={item.icon} />
+              )}
+              <span>{item.label}</span>
+              {item.badge && (
+                <span class="badge ml-auto">{item.badge}</span>
+              )}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <!-- Footer -->
+    <div class="mt-auto pt-4" style="border-top: 1px solid hsl(var(--border));">
+      <slot name="footer" />
+    </div>
+  </div>
+</aside>

@@ -1,0 +1,31 @@
+---
+title: Database
+description: Turso (libSQL) with file-DB local dev. Tables, migrations, and the commerce lifecycle.
+---
+
+Turso is hosted SQLite. Local dev uses a plain file — same SQL, zero accounts.
+
+## Setup
+
+```bash
+# local
+TURSO_DATABASE_URL="file:./local.db"
+# production
+TURSO_DATABASE_URL="libsql://your-db.turso.io"
+TURSO_AUTH_TOKEN="your-token"
+```
+
+## Schema
+
+`migrateSchema()` in `shared/lib/db.ts` creates 8 tables: `users`, `sessions`, `orgs`, `members`, `projects`, `orders`, `licenses`, `share_claims`. The schema test runs the **real** migration against a fresh file DB — any drift fails loudly.
+
+Commerce tables:
+
+- `orders` — one row per successful payment: email, tier, product, amount, status (`paid`/`refunded`), `coupon_code`, `cashback_forbidden`, `waiver`.
+- `licenses` — current entitlement per buyer: license key (unique), tier, seats, `updates_until` (`YYYY-MM-DD` or `lifetime`).
+
+## Rules enforced in SQL
+
+- Tier is CHECK-constrained to `starter`/`pro`/`pro_plus` — garbage tiers rejected at the DB.
+- License keys are UNIQUE.
+- Fulfillment is idempotent: redelivered webhooks return the existing license, never a second row.

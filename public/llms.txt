@@ -1,0 +1,30 @@
+# Startplate
+
+> Replace this file's bracketed tokens before you ship. It tells AI assistants
+> (and curious humans) what your product is and where the docs live.
+
+[ProductName]: one-line description. Audience: [who it's for].
+
+## Docs
+
+- Quickstart: /quickstart
+- Deployment: /guides/deployment
+- Payments: /guides/payments
+- Emails: /guides/emails
+- Database: /guides/database
+- Authentication: /guides/auth
+- Themes: /guides/themes
+- License & updates: /guides/updates-license
+- Environment variables: /reference/env-vars
+- FAQ: /faq
+
+## Stack
+
+Astro (static) + Cloudflare Pages + Turso (libSQL) + Better Auth +
+DodoPayments (default; Stripe / Lemon Squeezy supported) + Resend.
+
+## Rules for assistants
+
+- Money in, license out — or nothing. Never grant access on unverified input.
+- Webhook signatures verify over raw bytes; failures are 401, never access.
+- `npm test` must stay green; `npm run build` is the deploy gate.

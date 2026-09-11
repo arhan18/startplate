@@ -1,0 +1,47 @@
+---
+interface Props {
+  title: string;
+  value: string | number;
+  change?: {
+    value: number;
+    isPositive: boolean;
+  };
+  icon?: string;
+  class?: string;
+}
+
+const { title, value, change, icon, class: className = '' } = Astro.props;
+---
+
+<div class:list={['card p-6', className]}>
+  <div class="flex items-start justify-between">
+    <div>
+      <p class="text-sm font-medium" style="color: hsl(var(--muted-foreground));">
+        {title}
+      </p>
+      <p class="mt-2 text-3xl font-bold" style="color: hsl(var(--foreground));">
+        {value}
+      </p>
+      {change && (
+        <div class="mt-2 flex items-center gap-1">
+          <span
+            class:list={[
+              'text-sm font-medium',
+              change.isPositive ? 'text-green-500' : 'text-red-500',
+            ]}
+          >
+            {change.isPositive ? '+' : ''}{change.value}%
+          </span>
+          <span class="text-xs" style="color: hsl(var(--muted-foreground));">
+            vs last month
+          </span>
+        </div>
+      )}
+    </div>
+    {icon && (
+      <div class="p-2 rounded-md" style="background-color: hsl(var(--muted));">
+        <span class="w-5 h-5 block" set:html={icon} />
+      </div>
+    )}
+  </div>
+</div>

@@ -1,0 +1,32 @@
+---
+title: FAQ & troubleshooting
+description: The errors you'll actually hit, and the answers buyers actually ask.
+---
+
+## Tests fail after a fresh install
+
+File DBs in `/tmp/startplate-*.db` persist between runs with the old schema. Clear first — always:
+
+```bash
+rm -f /tmp/startplate-*.db && npm test
+```
+
+## `better-auth` import errors
+
+The version is pinned exact for a reason (broken publishes upstream). Don't loosen it without a green suite.
+
+## Webhook returns 401
+
+Signatures are verified over exact raw bytes. Causes in order: wrong `*_WEBHOOK_SECRET`, parsed-then-reserialized body (read raw text), missing provider headers. Never grant access on verification error.
+
+## Fulfillment threw "Unknown product"
+
+The charging product ID isn't in `DODO_PRODUCTS_JSON`. Add the mapping — the throw is the protection working.
+
+## Do buyers get the docs?
+
+Yes — this site ships inside the template. Your buyers get the same 10 articles for their own projects.
+
+## How do I get support?
+
+Repo docs first (you're reading them), then email. No chat, no calls — that boundary is what keeps the price one-time.

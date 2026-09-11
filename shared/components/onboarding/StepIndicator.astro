@@ -1,0 +1,63 @@
+---
+interface Props {
+  steps: Array<{
+    title: string;
+    description?: string;
+    icon?: string;
+  }>;
+  currentStep: number;
+  class?: string;
+}
+
+const { steps, currentStep, class: className = '' } = Astro.props;
+---
+
+<div class:list={['flex items-center justify-center', className]}>
+  {steps.map((step, index) => (
+    <div class="flex items-center">
+      <!-- Step Circle -->
+      <div class="flex flex-col items-center">
+        <div
+          class:list={[
+            'w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-colors',
+            index < currentStep
+              ? 'bg-[hsl(var(--success))] text-[hsl(var(--success-foreground))]'
+              : index === currentStep
+                ? 'bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))]'
+                : 'bg-[hsl(var(--muted))] text-[hsl(var(--muted-foreground))]',
+          ]}
+        >
+          {index < currentStep ? (
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+          ) : (
+            <span>{index + 1}</span>
+          )}
+        </div>
+        <span
+          class:list={[
+            'mt-2 text-xs font-medium text-center max-w-[80px]',
+            index <= currentStep
+              ? 'text-[hsl(var(--foreground))]'
+              : 'text-[hsl(var(--muted-foreground))]',
+          ]}
+        >
+          {step.title}
+        </span>
+      </div>
+
+      <!-- Connector Line -->
+      {index < steps.length - 1 && (
+        <div
+          class:list={[
+            'w-12 h-0.5 mx-2 mt-[-20px]',
+            index < currentStep
+              ? 'bg-[hsl(var(--success))]'
+              : 'bg-[hsl(var(--muted))]',
+          ]}
+        />
+      )}
+    </div>
+  ))}
+</div>

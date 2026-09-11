@@ -1,0 +1,56 @@
+---
+interface Props {
+  step: number;
+  totalSteps: number;
+  class?: string;
+}
+
+const { step, totalSteps, class: className = '' } = Astro.props;
+---
+
+<div class:list={['card p-8 max-w-lg mx-auto', className]}>
+  <div class="mb-6">
+    <h2 class="text-xl font-bold" style="color: hsl(var(--foreground));">
+      <slot name="title">Step {step + 1} of {totalSteps}</slot>
+    </h2>
+    <p class="mt-2 text-sm" style="color: hsl(var(--muted-foreground));">
+      <slot name="description" />
+    </p>
+  </div>
+
+  <form id="onboarding-form" class="flex flex-col gap-4">
+    <slot />
+
+    <div class="flex gap-3 mt-4">
+      {step > 0 && (
+        <button type="button" id="prev-btn" class="btn-secondary flex-1">
+          Back
+        </button>
+      )}
+      <button type="submit" class="btn-primary flex-1">
+        {step === totalSteps - 1 ? 'Complete' : 'Continue'}
+      </button>
+    </div>
+  </form>
+</div>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const form = document.getElementById('onboarding-form') as HTMLFormElement;
+    const prevBtn = document.getElementById('prev-btn');
+
+    if (form) {
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        // Dispatch custom event for parent to handle
+        window.dispatchEvent(new CustomEvent('onboarding:next'));
+      });
+    }
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        window.dispatchEvent(new CustomEvent('onboarding:prev'));
+      });
+    }
+  });
+</script>

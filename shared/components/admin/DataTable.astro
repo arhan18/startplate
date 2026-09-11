@@ -1,0 +1,45 @@
+---
+interface Column<T> {
+  key: string;
+  label: string;
+  render?: (item: T) => string;
+}
+
+interface Props<T> {
+  columns: Column<T>[];
+  data: T[];
+  emptyMessage?: string;
+  class?: string;
+}
+
+const { columns, data, emptyMessage = 'No data available', class: className = '' } = Astro.props;
+---
+
+<div class:list={['overflow-x-auto', className]}>
+  <table class="table">
+    <thead>
+      <tr>
+        {columns.map((col) => (
+          <th>{col.label}</th>
+        ))}
+      </tr>
+    </thead>
+    <tbody>
+      {data.length === 0 ? (
+        <tr>
+          <td colspan={columns.length} class="text-center py-8" style="color: hsl(var(--muted-foreground));">
+            {emptyMessage}
+          </td>
+        </tr>
+      ) : (
+        data.map((item) => (
+          <tr>
+            {columns.map((col) => (
+              <td set:html={col.render ? col.render(item) : (item as any)[col.key]} />
+            ))}
+          </tr>
+        ))
+      )}
+    </tbody>
+  </table>
+</div>

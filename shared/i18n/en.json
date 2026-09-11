@@ -1,0 +1,17 @@
+{
+  "nav": {
+    "home": "Home",
+    "products": "Products",
+    "blog": "Blog",
+    "docs": "Documentation",
+    "about": "About"
+  },
+  "hero": {
+    "title": "Welcome to {product}",
+    "subtitle": "Build amazing things",
+    "cta": "Get Started"
+  },
+  "footer": {
+    "copyright": "© 2026 {name}. All rights reserved."
+  }
+}

@@ -1,0 +1,8 @@
+# Buyer repo ignores (ships inside the Startplate template)
+node_modules/
+dist/
+.env
+.dev.vars
+.wrangler/
+*.log
+.DS_Store
